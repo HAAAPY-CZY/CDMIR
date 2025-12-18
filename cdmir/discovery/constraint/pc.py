@@ -6,7 +6,18 @@ from cdmir.discovery.constraint.adjacency_search import adjacency_search
 
 
 class PC(object):
+    """
+    A Python implementation of the PC algorithm for causal discovery.
 
+    Attributes
+    ----------
+    skeleton : Undirected graph representing causal relationships
+    causal_graph : Partially directed acyclic graph (PDAG)
+    sep_set : Separation sets for node pairs
+    alpha : Significance level for independence tests
+    indep_test : Example of Conditional Independence Test
+    verbose : Whether to print algorithm progress
+    """
 
     def __init__(self,
                  alpha: float = 0.05,
@@ -14,10 +25,11 @@ class PC(object):
                  verbose: bool = False
                  ):
         """
-        This method is to implement PC algorithm
-                :param alpha: Significance level for conditional independence tests (default: 0.05)
-                :param adjacency_search_method: Function for adjacency search phase (default: adjacency_search)
-                :param verbose: Whether to print algorithm progress (default: False)
+        Initialize a PC estimator.
+
+        :param alpha: Significance level for conditional independence tests (default: 0.05)
+        :param adjacency_search_method: Function for adjacency search phase (default: adjacency_search)
+        :param verbose: Whether to print algorithm progress (default: False)
         """
         self.skeleton = None
         self.causal_graph = None
@@ -31,17 +43,19 @@ class PC(object):
     def fit(self, data, var_names, indep_cls, *args, **kwargs):
         """
         This method is the core training method of the model, which is based on input data
-        and conditional independence testing to construct and direct causal diagrams
-                :param data: Input dataset
-                :param var_names: List of variable names
-                :param indep_cls: Conditional independence test class
-                :param *args: Positional arguments for independence test
-                :param **kwargs: Keyword arguments for independence test
+        and conditional independence testing to construct and direct causal diagrams.
+
+        :param data: Input dataset
+        :param var_names: List of variable names
+        :param indep_cls: Conditional independence test class
+        :param *args: Positional arguments for independence test
+        :param **kwargs: Keyword arguments for independence test
         """
         assert issubclass(indep_cls, ConditionalIndependentTest)
         self.indep_test = indep_cls(data, var_names, *args, **kwargs)
-        self.causal_graph, self.sep_set = self.adjacency_search_method(self.indep_test, self.indep_test.var_names,
-                                                                       self.alpha, verbose=self.verbose)
+        self.causal_graph, self.sep_set = self.adjacency_search_method(
+            self.indep_test, self.indep_test.var_names, self.alpha, verbose=self.verbose
+        )
         self.skeleton = copy.deepcopy(self.causal_graph)
         self.causal_graph.rule0(self.sep_set, self.verbose)
         self.causal_graph.orient_by_meek_rules(self.verbose)
