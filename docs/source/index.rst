@@ -29,6 +29,12 @@ Contents
 
 .. toctree::
    :maxdepth: 1
+   :caption: effect methods
+
+   effect_methods/index
+
+.. toctree::
+   :maxdepth: 1
    :caption: Independence tests
 
    independence_tests_index/index

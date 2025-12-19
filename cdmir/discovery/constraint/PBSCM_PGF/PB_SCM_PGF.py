@@ -1,7 +1,7 @@
-from cdmir.effect.PBSCM_PGF.util import *
+from cdmir.discovery.constraint.PBSCM_PGF.util import *
 from tqdm import tqdm
 from copy import deepcopy
-from cdmir.effect.PBSCM_PGF.CCARankTest import CCARankTester
+from cdmir.discovery.constraint.PBSCM_PGF.CCARankTest import CCARankTester
 
 
 np.set_printoptions(linewidth=np.inf, precision=3)
